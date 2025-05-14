@@ -1,10 +1,10 @@
 import streamlit as st
-import PyPDF2
+import PyPDF
 import requests
 from bs4 import BeautifulSoup
 
 def extract_text_from_pdf(file):
-    reader = PyPDF2.PdfReader(file)
+    reader = PyPDF.PdfReader(file)
     text = ""
     for page in reader.pages:
         text += page.extract_text() or ""
