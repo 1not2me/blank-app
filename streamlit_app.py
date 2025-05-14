@@ -17,42 +17,42 @@ def extract_text_from_url(url):
         paragraphs = soup.find_all('p')
         return "\n".join([p.get_text() for p in paragraphs])
     except Exception as e:
-        return f"שגיאה: {e}"
+        return f"Error: {e}"
 
-def summarize_text(text, length="קצר"):
-    if length == "קצר":
+def summarize_text(text, length="short"):
+    if length == "short":
         return text[:300] + "..."
-    elif length == "בינוני":
+    elif length == "medium":
         return text[:600] + "..."
-    elif length == "מפורט":
+    elif length == "detailed":
         return text[:1000] + "..."
     return text[:300] + "..."
 
-st.set_page_config(page_title="מסכם טקסטים חכם", layout="centered")
+st.set_page_config(page_title="Smart Text Summarizer", layout="centered")
 
-st.title("📄 אפליקציית סיכום טקסטים")
-st.write("בחרי אם להעלות קובץ או להכניס קישור")
+st.title("📄 Smart Text Summarizer")
+st.write("Choose to upload a PDF file or enter a website URL")
 
-option = st.radio("מקור הטקסט:", ["קובץ", "קישור"])
+option = st.radio("Text source:", ["File", "URL"])
 
 text = ""
 
-if option == "קובץ":
-    uploaded_file = st.file_uploader("העלאת קובץ PDF", type=["pdf"])
+if option == "File":
+    uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
     if uploaded_file is not None:
         text = extract_text_from_pdf(uploaded_file)
 
-elif option == "קישור":
-    url = st.text_input("הכניסי כתובת אתר")
+elif option == "URL":
+    url = st.text_input("Enter a website URL:")
     if url:
         text = extract_text_from_url(url)
 
 if text:
-    st.subheader("✏️ טקסט שחולץ")
-    st.text_area("תצוגה מקדימה", value=text[:1000], height=200)
+    st.subheader("📝 Extracted Text")
+    st.text_area("Preview", value=text[:1000], height=200)
 
-    summary_length = st.selectbox("בחרי את אורך הסיכום:", ["קצר", "בינוני", "מפורט"])
-    if st.button("צור סיכום"):
+    summary_length = st.selectbox("Choose summary length:", ["short", "medium", "detailed"])
+    if st.button("Generate Summary"):
         summary = summarize_text(text, summary_length)
-        st.subheader("📝 סיכום")
-        st.write(summary) 
+        st.subheader("🧾 Summary")
+        st.write(summary)
